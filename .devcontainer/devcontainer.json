@@ -1,0 +1,13 @@
+{
+    "name": "Python Development with XVFB",
+    "image": "mcr.microsoft.com/vscode/devcontainers/python:3.9",
+    "postCreateCommand": [
+      "apt-get update",
+      "apt-get install -y xvfb",
+      "pip install pyvirtualdisplay Pillow imageio"
+    ],
+    "runArgs": [
+      "--shm-size=2g"
+    ]
+  }
+  
