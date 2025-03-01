@@ -1,11 +1,11 @@
 
-import turtle
+import turtle            # set up alex
 
-# Create a turtle object
+wn = turtle.Screen()
 t = turtle.Turtle()
-t.speed(100)  # Fast drawing speed
+t.speed(100)
+for i in range(4):   # repeat four times
+    t.forward(50)
+    t.left(90)
 
-# Animation loop: Draw and capture each step
-for i in range(10):
-    t.forward(100)
-    t.right(40)    
+# wn.exitonclick()
