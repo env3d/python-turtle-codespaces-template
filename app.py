@@ -8,57 +8,50 @@ import os
 import numpy as np
 import threading
 import time
+import setup
 
-disp = Display()
-disp.start()
-
-# Set the location of the XAUTHORITY file
-xauthority_path = '/home/vscode/.Xauthority'
-
-# Ensure the XAUTHORITY file exists (create if necessary)
-if not os.path.exists(xauthority_path):
-    with open(xauthority_path, 'w') as f:
-        pass  # Create the empty .Xauthority file
-
-# Set the DISPLAY and XAUTHORITY environment variables manually
-os.environ['XAUTHORITY'] = xauthority_path
-
-# Set the DISPLAY environment variable explicitly (this is needed for pyautogui)
-os.environ['DISPLAY'] = f':{disp.display}'
 
 # Event to signal when to stop the screen recording
 stop_event = threading.Event()
 
 # Function to record the screen in a separate thread
 def record_screen():
+    fps = 30
     try: 
         os.remove('output.gif')
-    except:
+    except FileNotFoundError:
         pass
-    
-    # Set up the WebM writer using imageio and FFmpeg
-    writer = imageio.get_writer('output.gif', fps=20)  # FPS set to 20 frames per second
 
-    # Capture the screen for 10 seconds
+    writer = imageio.get_writer('output.gif', fps=fps)  # Set FPS
+
+    frame_duration = 1 / fps  # Calculate time per frame
     start_time = time.time()
-    while not stop_event.is_set():  # Record for 10 seconds
-        # Capture the screen using PIL's ImageGrab.grab() from the virtual display
-        screenshot = ImageGrab.grab()
 
-        # Convert screenshot to numpy array for imageio
+    while not stop_event.is_set():
+        loop_start = time.time()
+
+        # Capture the screen
+        screenshot = ImageGrab.grab()
         frame = np.array(screenshot)
 
-        # Append the frame to the WebM video
+        # Append frame to the video
         writer.append_data(frame)
-        
 
-    # Close the WebM writer
+        # Sleep to maintain the correct FPS
+        elapsed = time.time() - loop_start
+        time.sleep(max(0, frame_duration - elapsed))  # Ensure consistent timing
+
     writer.close()
 
+# Here's where we really start
+
+disp = Display(size=(setup.SCREEN_WIDTH+20,setup.SCREEN_HEIGHT+20))
+disp.start()
 
 # Start the screen recording in a separate thread
 recording_thread = threading.Thread(target=record_screen)
 recording_thread.start()
+
 
 # Executes everything inside main.py
 import main

@@ -1,11 +1,13 @@
 
-import turtle            # set up alex
+# type: ignore
+import turtle             
 
 wn = turtle.Screen()
-t = turtle.Turtle()
-t.speed(100)
-for i in range(4):   # repeat four times
-    t.forward(50)
-    t.left(90)
 
-# wn.exitonclick()
+t = turtle.Turtle()
+
+for i in range(4):   # repeat four times
+    t.forward(100)
+    t.left(90)    
+
+wn.exitonclick()
