@@ -23,8 +23,7 @@ globals().update({name: getattr(mymodule, name) for name in dir(mymodule) if not
 # Turtle = mymodule.Turtle
 
 # Redefine the Screen constructor to take screen size from the module's constants
-def Screen():
-    import setup
+def Screen():    
     _s = mymodule.Screen()
     _s.exitonclick = lambda : None
     _s.screensize(canvwidth=SCREEN_WIDTH, canvheight=SCREEN_HEIGHT)
